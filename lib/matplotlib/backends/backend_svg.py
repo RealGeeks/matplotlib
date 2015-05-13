@@ -248,6 +248,8 @@ def generate_css(attrib={}):
     return ''
 
 _capstyle_d = {'projecting' : 'square', 'butt' : 'butt', 'round': 'round',}
+
+
 class RendererSVG(RendererBase):
     FONT_SCALE = 100.0
     fontd = maxdict(50)
@@ -645,19 +647,19 @@ class RendererSVG(RendererBase):
         path_codes = []
         writer.start('defs')
         for i, (path, transform) in enumerate(self._iter_collection_raw_paths(
-            master_transform, paths, all_transforms)):
+                master_transform, paths, all_transforms)):
             transform = Affine2D(transform.get_matrix()).scale(1.0, -1.0)
             d = self._convert_path(path, transform, simplify=False)
             oid = 'C%x_%x_%s' % (self._path_collection_id, i,
-                                  self._make_id('', d))
+                                 self._make_id('', d))
             writer.element('path', id=oid, d=d)
             path_codes.append(oid)
         writer.end('defs')
 
         for xo, yo, path_id, gc0, rgbFace in self._iter_collection(
-            gc, master_transform, all_transforms, path_codes, offsets,
-            offsetTrans, facecolors, edgecolors, linewidths, linestyles,
-            antialiaseds, urls, offset_position):
+                gc, master_transform, all_transforms, path_codes, offsets,
+                offsetTrans, facecolors, edgecolors, linewidths, linestyles,
+                antialiaseds, urls, offset_position):
             clipid = self._get_clip(gc0)
             url = gc0.get_url()
             if url is not None:
@@ -804,7 +806,7 @@ class RendererSVG(RendererBase):
             # to the clip-path
             self.writer.start('g', attrib={'clip-path': 'url(#%s)' % clipid})
 
-        trans = [1,0,0,1,0,0]
+        trans = [1, 0, 0, 1, 0, 0]
         if rcParams['svg.image_noscale']:
             trans = list(im.get_matrix())
             trans[5] = -trans[5]
@@ -816,7 +818,7 @@ class RendererSVG(RendererBase):
             im.set_interpolation(0)
             im.resize(numcols, numrows)
 
-        h,w = im.get_size_out()
+        h, w = im.get_size_out()
 
         if dx is None:
             w = 72.0*w/self.image_dpi
@@ -840,9 +842,9 @@ class RendererSVG(RendererBase):
                 "data:image/png;base64,\n" +
                 base64.b64encode(bytesio.getvalue()).decode('ascii'))
         else:
-            self._imaged[self.basename] = self._imaged.get(self.basename,0) + 1
-            filename = '%s.image%d.png'%(self.basename, self._imaged[self.basename])
-            verbose.report( 'Writing image file for inclusion: %s' % filename)
+            self._imaged[self.basename] = self._imaged.get(self.basename, 0) + 1
+            filename = '%s.image%d.png' % (self.basename, self._imaged[self.basename])
+            verbose.report('Writing image file for inclusion: %s' % filename)
             _png.write_png(np.array(im)[::-1], filename)
             oid = oid or 'Im_' + self._make_id('image', filename)
             attrib['xlink:href'] = filename
@@ -903,7 +905,7 @@ class RendererSVG(RendererBase):
 
         writer.comment(s)
 
-        glyph_map=self._glyph_map
+        glyph_map = self._glyph_map
 
         text2path = self._text2path
         color = rgb2hex(gc.get_rgb())
@@ -941,7 +943,7 @@ class RendererSVG(RendererBase):
 
             writer.start('g', attrib=attrib)
             for glyph_id, xposition, yposition, scale in glyph_info:
-                attrib={'xlink:href': '#%s' % glyph_id}
+                attrib = {'xlink:href': '#%s' % glyph_id}
                 if xposition != 0.0:
                     attrib['x'] = six.text_type(xposition)
                 if yposition != 0.0:
@@ -1023,7 +1025,6 @@ class RendererSVG(RendererBase):
             fontsize = prop.get_size_in_points()
 
             fontfamily = font.family_name
-            fontstyle = prop.get_style()
 
             attrib = {}
             # Must add "px" to workaround a Firefox bug
@@ -1075,7 +1076,7 @@ class RendererSVG(RendererBase):
             writer.comment(s)
 
             width, height, descent, svg_elements, used_characters = \
-                   self.mathtext_parser.parse(s, 72, prop)
+                self.mathtext_parser.parse(s, 72, prop)
             svg_glyphs = svg_elements.svg_glyphs
             svg_rects = svg_elements.svg_rects
 
@@ -1102,7 +1103,7 @@ class RendererSVG(RendererBase):
                     'font-style': font.style_name.lower(),
                     'font-weight': font.style_name.lower()})
                 if thetext == 32:
-                    thetext = 0xa0 # non-breaking space
+                    thetext = 0xa0  # non-breaking space
                 spans.setdefault(style, []).append((new_x, -new_y, thetext))
 
             if rcParams['svg.fonttype'] == 'svgfont':
