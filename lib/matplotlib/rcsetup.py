@@ -583,7 +583,7 @@ def deprecate_svg_embed_char_paths(value):
 
 
 validate_svg_fonttype = ValidateInStrings('svg.fonttype',
-                                          ['none', 'path', 'svgfont'])
+                                          ['none', 'path', 'svgfont', 'browser'])
 
 
 def validate_hinting(s):

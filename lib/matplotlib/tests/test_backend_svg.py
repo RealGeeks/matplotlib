@@ -193,6 +193,17 @@ def test_determinism_tex():
     # unique filename to allow for parallel testing
     _test_determinism('determinism_tex.svg', usetex=True)
 
+@image_comparison(baseline_images=['no_inline_text_styling'],
+                  extensions=['svg'])
+def test_browser_backend():
+    plt.rcParams['svg.fonttype'] = 'browser'
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+    ax.plot(np.arange(10), np.arange(10))
+    ax.set_xlabel('nostyle-xlabel')
+    ax.set_ylabel('nostyle-ylabel')
+    ax.set_title('nostyle-title')
+
 
 if __name__ == '__main__':
     import nose

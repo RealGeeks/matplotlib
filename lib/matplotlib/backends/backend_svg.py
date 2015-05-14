@@ -311,7 +311,7 @@ class RendererSVG(RendererBase):
             'stroke-linecap': 'butt'})
         writer.start('defs')
         writer.start('style', type='text/css')
-        writer.data('*{%s}\n' % default_style)
+        writer.data('*{%s}\n' % styling)
         writer.end('style')
         writer.end('defs')
 
@@ -1149,6 +1149,36 @@ class RendererSVG(RendererBase):
 
             writer.end('g')
 
+    def _draw_text_for_browser(self, gc, x, y, s, prop, angle, ismath, mtext=None):
+        """
+        just present the text for the browser to style.
+        *prop*
+          font property
+        *s*
+          text
+        *usetex*
+          If True, use matplotlib usetex mode.
+        *ismath*
+          If True, use mathtext parser. If "TeX", use *usetex* mode.
+        """
+        writer = self.writer
+        ha_mpl_to_svg = {'left': 'start', 'right': 'end', 'center': 'middle'}
+        va_mpl_to_svg = {'top':'hanging', 'center': 'middle'}
+        attrib = {}
+        style = {}
+        if mtext:
+            style['text-anchor'] = ha_mpl_to_svg.get(mtext.get_ha(), 'inherit')
+            style['dominant-baseline'] = va_mpl_to_svg.get(mtext.get_va(), \
+                'auto')
+            attrib['style'] = generate_css(style)
+            transform = mtext.get_transform()
+            ax, ay = transform.transform_point(mtext.get_position())
+            ay = self.height - ay
+            attrib['x'] = str(ax)
+            attrib['y'] = str(ay)
+            attrib['transform'] = "rotate(%f, %f, %f)" % (-angle, ax, ay)
+            writer.element('text', s, attrib=attrib)
+
     def draw_tex(self, gc, x, y, s, prop, angle, ismath='TeX!', mtext=None):
         self._draw_text_as_path(gc, x, y, s, prop, angle, ismath="TeX")
 
@@ -1165,6 +1195,8 @@ class RendererSVG(RendererBase):
 
         if rcParams['svg.fonttype'] == 'path':
             self._draw_text_as_path(gc, x, y, s, prop, angle, ismath, mtext)
+        elif rcParams['svg.fonttype'] == 'browser':
+            self._draw_text_for_browser(gc, x, y, s, prop, angle, ismath, mtext)
         else:
             self._draw_text_as_text(gc, x, y, s, prop, angle, ismath, mtext)
 
