@@ -440,7 +440,7 @@ def deprecate_svg_embed_char_paths(value):
                   "svg.fonttype instead.")
 
 validate_svg_fonttype = ValidateInStrings('svg.fonttype',
-                                          ['none', 'path', 'svgfont'])
+                                          ['none', 'path', 'svgfont', 'browser'])
 
 
 def validate_hinting(s):
@@ -716,7 +716,7 @@ defaultParams = {
     'xtick.minor.pad':   [4, validate_float],    # distance to label in points
     'xtick.color':       ['k', validate_color],  # color of the xtick labels
     'xtick.minor.visible':   [False, validate_bool],    # visiablility of the x axis minor ticks
-    
+
     # fontsize of the xtick labels
     'xtick.labelsize':   ['medium', validate_fontsize],
     'xtick.direction':   ['in', six.text_type],            # direction of xticks

@@ -119,6 +119,18 @@ def test_bold_font_output_with_none_fonttype():
     ax.set_title('bold-title', fontweight='bold')
 
 
+@image_comparison(baseline_images=['no_inline_text_styling'],
+                  extensions=['svg'])
+def test_browser_backend():
+    plt.rcParams['svg.fonttype'] = 'browser'
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+    ax.plot(np.arange(10), np.arange(10))
+    ax.set_xlabel('nostyle-xlabel')
+    ax.set_ylabel('nostyle-ylabel')
+    ax.set_title('nostyle-title')
+
+
 if __name__ == '__main__':
     import nose
     nose.runmodule(argv=['-s', '--with-doctest'], exit=False)
